@@ -19,17 +19,17 @@ class UserItem extends StatelessWidget {
   final String nip;
   // final int id_user;
 
-  Future<List<User>> fetchUser() async {
-    var url = "http://172.16.17.142:3000/sapa/getdata.php?id=${this.nip}";
+  Future<dynamic> fetchUser() async {
+    var url = "http://172.16.17.142:3000/sapa/getdata.php?id=$nip";
     final response = await http.get(Uri.parse(url));
-    var list = json.decode(response.body);
+    var list = json.decode(json.encode(response.body));
 
     // List<User> _hasil = await list.map<User>((json) => User.fromJson(json)).toList();
 
     log(list.toString());
     return list;
   }
-
+  
   //final List<Map<String, dynamic>> hasil=[];
   // List<Map<String, int>> hasil = [{'id':item.id_user}];
   

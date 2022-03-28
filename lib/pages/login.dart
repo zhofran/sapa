@@ -17,10 +17,11 @@ class _LoginState extends State<Login> {
   
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
+  TextEditingController nip = TextEditingController();
 
   bool isLoading = true;
   
-  Future<dynamic> _login() async {
+  Future<String> _login() async {
     if(user.text.isEmpty || pass.text.isEmpty){
       Alert(context: context, title: "Data tidak boleh kosong", type: AlertType.warning).show();
     }
@@ -28,24 +29,27 @@ class _LoginState extends State<Login> {
     final response = await http.post(Uri.parse("http://172.16.17.143:80/sapa_wima/login.php"),
         body: {'username':user.text, 'password':pass.text});
     // var datauser = json.decode(response.body);
-    final datauser = json.decode(response.body);
+    String jsonDataString = response.body.toString();
+    final datauser = json.decode(jsonDataString);
     // User users = User.fromJson(datauser);
     // final users = User.fromMap(datauser);
+
+    // List<User> _datauser = await datauser.map<User>((json) => User.fromJson(json)).toList();
 
     if(datauser.length==0) {
       Alert(context: context, title: "Login gagal", type: AlertType.error).show();
       print("salah");
     }else{
-      debugPrint(datauser.toString());  
+      debugPrint(datauser[0]["id_user"].toString());
       Navigator.pushReplacement(
           context, MaterialPageRoute(
-            builder: (context) => Primary(item: datauser,)
+            builder: (context) => Primary(item: datauser[0]["id_user"].toString(),)
           )
       );
       Alert(context: context, title: "Login Berhasil", type: AlertType.success).show();
     }
 
-    return datauser;
+    return "datauser";
   }
   @override
   Widget build(BuildContext context) {
